@@ -21,13 +21,30 @@ def read_doc_file():
 def read_documents_into_sentence_tokens(all_docs):
     '''
     divide cada doc em lista de frases
+    lista com listas(estas listas sao tokens de frase)
     '''
     all_docs_sentences = []
     for i in range(len(all_docs)):
-        sentence_tokens = nltk.sent_tokenize(all_docs[i])
+        sentence_tokens = all_docs[i].split('.')
+        for i in range(len(sentence_tokens)):
+            sentence_tokens[i] = sentence_tokens[i].replace('\n', '')
+            sentence_tokens[i] = sentence_tokens[i].replace('\r', '')
+        sentence_tokens = sentence_tokens[:-1]
         all_docs_sentences.append(sentence_tokens)
     return all_docs_sentences
 
+def cosine_similarities(x, x2, thresholdCS = 0):
+    '''
+    :param x: sparseMatrix with all sentences transform
+    :param x2: sparseM with 1 sentence transform
+    :param thresholdCS: if value is provided returns only cosine_sims above the given threshold value
+    :return: returns cosine_sims, all if no thresholdCS argument is provided
+    '''
+    cosine_sims = cosine_similarity(x,x2)
+    for i in range(len(cosine_sims)):
+        if i < thresholdCS:
+            del cosine_sims[i]
+    return cosine_sims
 
 def addToGraph(graph, element, thresholdCS):
     '''
@@ -38,20 +55,10 @@ def addToGraph(graph, element, thresholdCS):
     adds an element to the graph
     when an element X is added the cosine similarity between it and all other elements is computed (elements yi),
     if the value of the cosine similarity is higher than the thresholdCS, then X is connected to Yi
+    if element similarity is not above threshold with any element, it's dropped and not added to the graph
     '''
+
 
     return
 
-def cosine_similarities(x, x2, thresholdCS = None):
-    '''
-    :param x: sparseMatrix with all elements transform
-    :param x2: sparseM with 1 sentence transform
-    :param thresholdCS: if value is provided returns only cosine_sims above the given threshold value
-    :return: returns cosine_sims, all if no thresholdCS argument is provided
-    '''
 
-    cosine_sims = []
-    if thresholdCS == None:
-
-
-    return
