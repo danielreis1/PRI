@@ -67,13 +67,12 @@ def addToGraph(graph, id, sim_indexes):
     graph[str(id)] = sim_indexes
     return
 
-
 def createGraph(elements, thresholdCS, vectorizer):
     '''
     :param elements: sentences in all docs
     :param thresholdCS:
     :param vectorizer: vectorizer with fitted vocabulary
-    :return: graph
+    :return: list with graphs - each graph 1 document
     '''
     '''
     the graph is created by the following kind of element:
@@ -84,12 +83,19 @@ def createGraph(elements, thresholdCS, vectorizer):
         key: id of element Si, value: set that contains the sentences that link to sentence Si
         sentences link only if cosine_sim between them is higher than a certain threshold
     '''
-
+    graphs = []
     graph = {}
-    for sentences in elements: # sentences is senteces in a document
+    for sentences in elements: # sentences variable is senteces in a document
+        graph = {}
         x = vectorizer.transform(sentences)
         for i in range(len(sentences)):
             x2 = vectorizer.transform([sentences[i]])
             indexes = cos_sims(x, x2, thresholdCS)
             addToGraph(graph, i, indexes)
-    return graph
+        graphs.append(graph.copy())
+    return graphs
+
+def get_top5_from_dict(D):
+    sort = sorted(D, key = D.get, reverse=True)[:5]
+    #print(sort)
+    return sort
