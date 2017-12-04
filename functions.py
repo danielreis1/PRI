@@ -5,6 +5,7 @@ from sklearn.metrics.pairwise import linear_kernel
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+
 nltk.download('punkt')
 nltk.download('stopwords')
 # global vars
@@ -68,7 +69,6 @@ def addToGraph(graph, id, sim_indexes):
     :param id: index da frase na lista de frases
     :param sim_indexes: indexes na lista de frases cujas frases ultrapassam a threshold de semelhanca
     :return:
-
     adds an element to the graph
     '''
 
@@ -107,5 +107,45 @@ def get_top5_from_dict(D):
     sort = sorted(D, key = D.get, reverse=True)[:5]
     #print(sort)
     return sort
+
+def PR_sentences_pos(doc_senteces):
+    '''
+    :param doc_senteces: sentences in a document
+    :return: {'index': value}
+    '''
+    ret = []
+    N = len(doc_senteces)
+    for i in range(len(doc_senteces)):
+        ret[str(i)] = N-i
+    return  ret
+
+def PR_EW_TFIDF(x,x2):
+    '''
+    :param x: vectorizer transform for element 1 
+    :param x2: same as x for element 2
+    :return: dict with 'index': TF - IDF
+    '''
+    '''
+    works for edges and prior
+    '''
+    
+    
+    return
+
+def PR_prob_NaiveBayes():
+    return
+
+def EW_nounPhrases():
+    return
+
+def EW_SVD():
+    '''
+
+    :return:
+    '''
+    '''
+        
+    '''
+    return
 
 

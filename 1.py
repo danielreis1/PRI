@@ -22,7 +22,7 @@ def rank(graph, sentences_length,  iterations = 50): # rank for ex.1
 
     # initialize rank_dict
     for i in graph:
-        rank_dict[str(i)] = 0
+        rank_dict[str(i)] = float(1/N)
 
     for i in range(iterations):
         for key in graph: # keys are sentences index in document
@@ -74,7 +74,7 @@ graphs = createGraph(all_docs_sentences, 0.2, vectorizer)
 graph = graphs[0]
 #print (graph)
 rank_dict = rank(graph, len(all_docs_sentences[0]), iterations=50)
-#print (rank_dict)
+print (rank_dict)
 
 
 indexes = get_top5_from_dict(rank_dict)
