@@ -10,14 +10,14 @@ nltk.download('stopwords')
 # global vars
 stopwords = nltk.corpus.stopwords.words('english')
 
-def read_doc_file():
+def read_doc_file(path):
     '''
     ler todos os textos-fonte com titulo
     '''
     all_docs = []
-    all_files = os.listdir('TextoFonteComTitulo')
+    all_files = os.listdir(path)
     for fl in all_files:
-        f = open('TextoFonteComTitulo/' + fl, 'r')
+        f = open(path + '/' + fl, 'r')
         content = f.read()
         all_docs.append(content)
     return all_docs
@@ -27,16 +27,24 @@ def read_documents_into_sentence_tokens(all_docs):
     divide cada doc em lista de frases
     lista com listas(estas listas sao tokens de frase)
     '''
-    all_docs_sentences = []
-    for i in range(len(all_docs)):
+    all_sentences = []
+    for i in range(len(all_docs)): # i is a doc
         sentence_tokens = all_docs[i].split('.')
-        for i in range(len(sentence_tokens)):
-            sentence_tokens[i] = sentence_tokens[i].replace('\n', '')
-            sentence_tokens[i] = sentence_tokens[i].replace('\r', '')
-            sentence_tokens[i] = sentence_tokens[i].replace('\t', '')
-        sentence_tokens = sentence_tokens[:-1]
-        all_docs_sentences.append(sentence_tokens)
-    return all_docs_sentences
+        sentence_tokens = clean_sentences(sentence_tokens)
+        all_sentences.append(sentence_tokens)
+    return all_sentences
+
+def clean_sentences(sentences):
+    ret_sentences = []
+    for i in range(len(sentences)):
+        sentences[i] = sentences[i].replace('\n', '')
+        sentences[i] = sentences[i].replace('\r', '')
+        sentences[i] = sentences[i].replace('\t', '')
+        if sentences[i] == '':  # checks for empty string
+            continue;
+        ret_sentences.append(sentences[i])
+    return ret_sentences
+
 
 def cos_sims(x, x2, thresholdCS=0):
     '''
@@ -57,8 +65,8 @@ def cos_sims(x, x2, thresholdCS=0):
 def addToGraph(graph, id, sim_indexes):
     '''
     :param graph:
-    :param id:
-    :param sim_indexes:
+    :param id: index da frase na lista de frases
+    :param sim_indexes: indexes na lista de frases cujas frases ultrapassam a threshold de semelhanca
     :return:
 
     adds an element to the graph
@@ -99,3 +107,5 @@ def get_top5_from_dict(D):
     sort = sorted(D, key = D.get, reverse=True)[:5]
     #print(sort)
     return sort
+
+
