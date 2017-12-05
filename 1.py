@@ -32,8 +32,8 @@ def rank(graph, sentences_length,  iterations = 50): # rank for ex.1
 
 def rank_function(N, rank_dict, graph, key, d=0.15):
     '''
-    :param N:
-    :param rank_dict:
+    :param N: number sentences
+    :param rank_dict: dictionary with 'index': rank
     :param d:
     :return: return rank_dict
     '''
@@ -70,9 +70,9 @@ print('')
 
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
-graphs = createGraph(all_docs_sentences, 0.2, vectorizer)
+graphs = createGraph(all_docs_sentences, vectorizer, 0.2)
 graph = graphs[0]
-#print (graph)
+print (graph)
 rank_dict = rank(graph, len(all_docs_sentences[0]), iterations=50)
 print (rank_dict)
 
@@ -84,3 +84,6 @@ indexes = [int(i) for i in indexes]
 
 for i in indexes:
     print all_docs_sentences[0][i]
+
+
+#TODO maximize d, inc d += 0.01 and check max val

@@ -11,6 +11,7 @@ nltk.download('stopwords')
 # global vars
 stopwords = nltk.corpus.stopwords.words('english')
 
+
 def read_doc_file(path):
     '''
     ler todos os textos-fonte com titulo
@@ -24,6 +25,7 @@ def read_doc_file(path):
         all_docs.append(content)
     return all_docs
 
+
 def read_documents_into_sentence_tokens(all_docs):
     '''
     divide cada doc em lista de frases
@@ -36,6 +38,7 @@ def read_documents_into_sentence_tokens(all_docs):
         all_sentences.append(sentence_tokens)
     return all_sentences
 
+
 def clean_sentences(sentences):
     ret_sentences = []
     for i in range(len(sentences)):
@@ -43,12 +46,12 @@ def clean_sentences(sentences):
         sentences[i] = sentences[i].replace('\r', '')
         sentences[i] = sentences[i].replace('\t', '')
         if sentences[i] == '':  # checks for empty string
-            continue;
+            continue
         ret_sentences.append(sentences[i])
     return ret_sentences
 
 
-def cos_sims(x, x2, thresholdCS=0):
+def cos_sims(x, x2, self_index, thresholdCS=0):
     '''
     :param x: sparseMatrix with all sentences transform
     :param x2: sparseM with 1 sentence transform
@@ -60,9 +63,11 @@ def cos_sims(x, x2, thresholdCS=0):
     conected = []
     cosine_sims = cosine_similarity(x, x2)
     for i in range(len(cosine_sims)):
-        if cosine_sims[i] > thresholdCS:
-            conected.append(i) # apends index of the sentence in the sentence list
+        if i != self_index:
+            if cosine_sims[i] > thresholdCS:
+                conected.append(i) # apends index of the sentence in the sentence list
     return conected
+
 
 def addToGraph(graph, id, vals):
     '''
@@ -77,7 +82,8 @@ def addToGraph(graph, id, vals):
     graph[str(id)] = vals
     return
 
-def createGraph(elements, thresholdCS, vectorizer):
+
+def createGraph(elements, vectorizer, thresholdCS=.2):
     '''
     :param elements: sentences in all docs
     :param thresholdCS:
@@ -100,50 +106,61 @@ def createGraph(elements, thresholdCS, vectorizer):
         x = vectorizer.transform(sentences)
         for i in range(len(sentences)):
             x2 = vectorizer.transform([sentences[i]])
-            indexes = cos_sims(x, x2, thresholdCS)
+            indexes = cos_sims(x, x2, i, thresholdCS)
             addToGraph(graph, i, indexes)
         graphs.append(graph.copy())
     return graphs
+
 
 def get_top5_from_dict(D):
     sort = sorted(D, key = D.get, reverse=True)[:5]
     #print(sort)
     return sort
 
-def PR_sentences_pos(doc_senteces):
-    '''
-    :param doc_senteces: sentences in a document
-    :return: {'index': value}
-    '''
-    ret = []
-    N = len(doc_senteces)
-    for i in range(len(doc_senteces)):
-        ret[str(i)] = 1/N
-    return  ret
 
-def PR_EW_TFIDF(vectorizer):
+def PR_sentences_pos(doc, sent):
     '''
-    :param x: vectorizer transform for element 1 
-    :param x2: same as x for element 2
-    :return: dict with 'index': TF - IDF
+    :param doc: documento
+    :param sent: frase
+    :return: returns inverse of the position of the sentence in the doc
+    '''
+
+    for i in doc:
+        if doc[i] == sent:
+            return float(1/i)
+
+
+def PR_EW_TFIDF(doc, sent):
+    '''
+    :param vectorizer: vectorizer (fitted)
+    :param ele1: element 1
+    :param ele2: * 2
+    :return: cosine sims ele1 and ele2
     '''
     '''
     works for edges and prior
     '''
 
-    x = vectorizer.transform()
-    x2 = vectorizer.transform()
-
+    vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
+                                 stop_words=stopwords)
+    vectorizer.fit(doc)
+    x = vectorizer.transform(doc)
+    x2 = vectorizer.transform(sent)
 
     return cosine_similarity(x, x2)
 
-def PR_prob_NaiveBayes():
+
+def PR_prob_NaiveBayes(doc, sent):
 
 
     return
+
 
 def EW_nounPhrases():
+
+
     return
+
 
 def EW_SVD():
     '''
