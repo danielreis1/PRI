@@ -1,6 +1,6 @@
 from functions import *
 
-all_docs = read_doc_file('TextoFonteComTitulo')
+all_docs, all_summaries = read_doc_file('TextoFonteComTitulo')
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 
 #print (all_sentences)
@@ -10,7 +10,6 @@ all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 PR = {'tfidf': PR_EW_TFIDF} #'sentence_pos':PR_sentences_pos,
 EW = {'tfidf':PR_EW_TFIDF}
 vectorizer = 0
-
 
 
 def getPR(func_name):

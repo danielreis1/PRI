@@ -12,18 +12,26 @@ nltk.download('stopwords')
 stopwords = nltk.corpus.stopwords.words('english')
 
 
-def read_doc_file(path):
+def read_doc_file(path_1, path_2=None):
     '''
     ler todos os textos-fonte com titulo
     '''
     all_docs = []
-    all_files = os.listdir(path)
+    all_summaries = []
+    all_files = os.listdir(path_1)
     for fl in all_files:
-        f = open(path + '/' + fl, 'r')
-        content = f.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
-        content += f.read().decode('cp1252')
+        f1 = open(path_1 + '/' + fl, 'r')
+        content = f1.readline().decode('cp1252') + '.'  # primeira frase e' o titulo
+        content += f1.readline().decode('cp1252') + '.'  # segunda frase e' subtitulo
+        content += f1.read().decode('cp1252')
         all_docs.append(content)
-    return all_docs
+        if path_2 is not None:
+            f2 = open(path_2 + '/' + fl, 'r')
+            content = f2.readline().decode('cp1252') + '.'  # primeira frase e' o titulo
+            content += f2.readline().decode('cp1252') + '.'  # segunda frase e' subtitulo
+            content += f2.read().decode('cp1252')
+            all_summaries.append(content)
+    return all_docs, all_summaries
 
 
 def read_documents_into_sentence_tokens(all_docs):
@@ -45,6 +53,7 @@ def clean_sentences(sentences):
         sentences[i] = sentences[i].replace('\n', '')
         sentences[i] = sentences[i].replace('\r', '')
         sentences[i] = sentences[i].replace('\t', '')
+        sentences[i].strip()
         if sentences[i] == '':  # checks for empty string
             continue
         ret_sentences.append(sentences[i])
