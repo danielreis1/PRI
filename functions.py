@@ -20,7 +20,7 @@ def read_doc_file(path):
     all_files = os.listdir(path)
     for fl in all_files:
         f = open(path + '/' + fl, 'r')
-        content = f.readline().decode('cp1252') + '.'  # primeira frase e' o titulo
+        content = f.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
         content += f.read().decode('cp1252')
         all_docs.append(content)
     return all_docs
@@ -120,14 +120,14 @@ def get_top5_from_dict(D):
 
 def PR_sentences_pos(doc, sent):
     '''
-    :param doc: documento
+    :param doc: documento todo dividido em frases
     :param sent: frase
     :return: returns inverse of the position of the sentence in the doc
     '''
 
     for i in doc:
         if doc[i] == sent:
-            return float(1/i)
+            return float(1/(i+1))
 
 
 def PR_EW_TFIDF(doc, sent):

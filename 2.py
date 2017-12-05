@@ -34,9 +34,6 @@ def rank(graphs, iterations=50):
 
     for prior in PR:
         for eWeight in EW:
-
-            #TODO outros casos com vectorizer para o naive bayes ??
-
             rank_dicts = []
             for doc_number in graphs:
                 rank = rank_doc(graphs[doc_number], prior, eWeight, iterations, doc_number)
@@ -62,11 +59,23 @@ def rank_doc(graph, prior, eWeight, iterations, doc_number):
 def rank_function(rank_dict, sent_number, doc_number, graph, prior, eWeight, doc, d=0.15):
     sent = doc[sent_number]
     prior = getPR(prior)(doc, sent)
-    eWeight = getEW(eWeight)
-    sumPrior = 1
-    sumWeights = 0
+    sumPrior = 0
+
+    for i in graph: # sums over all elements in the doc (graph)
+        sumPrior += getPR(prior)(doc, doc[int(i)])
+
+    sume = 0
     sumLinks = 0
-    PR = float(d * prior / sumPrior) + (1 - d) * sumLinks
+    sumLinkWeights = 0
+
+    for link in graph[str(sent_number)]: # link is an edge
+        PR = rank_dict[sent_number]
+        weight = getEW(eWeight)(sent, doc[link])
+        for link_of_link in graph[str(link)]:
+            sumLinkWeights += getEW(eWeight)(doc[link], )
+        sume += float(PR * weight / sumLinkWeights)
+
+    PR = float(d * prior / sumPrior) + (1 - d) * sume
     return PR
 
 
@@ -74,7 +83,7 @@ vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False
 vectorizer.fit(all_docs)
 
 graphs = createGraph(all_docs_sentences, vectorizer)
-print graphs
+#print graphs
 
 ranks = rank(graphs)
 print ranks
