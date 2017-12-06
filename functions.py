@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import re
 
 
 nltk.download('punkt')
@@ -51,6 +52,7 @@ def read_documents_into_sentence_tokens(all_docs):
     all_sentences = []
     for i in range(len(all_docs)): # i is a doc
         sentence_tokens = all_docs[i].split('.')
+        sentence_tokens = re.split(r'[!?.;]', all_docs[i])
         sentence_tokens = clean_sentences(sentence_tokens)
         all_sentences.append(sentence_tokens)
     return all_sentences
