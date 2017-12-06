@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.linear_model import Perceptron
 from scipy import sparse
+from sklearn.metrics import accuracy_score
 
 
 
@@ -67,7 +68,6 @@ def get_train_data():
                 y_train.append(check_summaries(key, i, j))
                 #print cosine_similarity(x,x2)[0][0]
                 X_train.append([j, cosine_similarity(x, x2)[0][0]])
-        #print cosines
 
 
 
@@ -93,13 +93,12 @@ for key in all_summaries:
     all_summaries_sentences[key] = read_summaries_into_sentences(all_summaries[key])
 
 get_train_data()
-
 ppn = Perceptron(n_iter=40, eta0=0.1, random_state=0)
 ppn.fit(X_train,y_train)
-
-
 y_pred = ppn.predict(X_train)
+
 print('Misclassified samples: %d' % (y_train != y_pred).sum())
+print('Accuracy: %.2f' % accuracy_score(y_train, y_pred))
 
 
 
