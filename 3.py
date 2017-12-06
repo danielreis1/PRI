@@ -3,6 +3,7 @@ import copy
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.linear_model import Perceptron
+from scipy import sparse
 
 
 
@@ -49,15 +50,37 @@ def read_summaries_into_sentences(all_docs):
         all_sentences.append(sentence_tokens)
     return all_sentences
 
+def get_train_data():
+    '''
+    Cria a train data e a target data para treinar o perceptron (so usa posicao no texto e coseno)
+    '''
+    for key in all_docs_sentences:
+        cosines = []
+        all_docs_sentences[key] = read_documents_into_sentences(all_docs[key])
+        for i in range(len(all_docs[key])):
+            x = vectorizer.fit_transform(all_docs_sentences[key][i])
+            for j in range(len(all_docs_sentences[key][i])):
+                #print 'frase: ' + str(j)
+                #print x.toarray()
+                sentence = all_docs_sentences[key][i][j]
+                x2 = vectorizer.transform([sentence])
+                y_train.append(check_summaries(key, i, j))
+                #print cosine_similarity(x,x2)[0][0]
+                X_train.append([j, cosine_similarity(x, x2)[0][0]])
+        #print cosines
+
+
 
 vectorizer = TfidfVectorizer(norm='l2',min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, analyzer = 'word')
 groups = ['Brasil' ,'Cotidiano', 'Dinheiro', 'Especial', 'Mundo', 'Opiniao', 'Tudo']
 all_docs = {}
 all_summaries = {}
 
+
 X_train = []
 y_train = []
-
+X_test = []
+y_test = []
 
 
 for i in range(len(groups)):
@@ -66,30 +89,10 @@ for i in range(len(groups)):
 all_docs_sentences = copy.deepcopy(all_docs)
 all_summaries_sentences = copy.deepcopy(all_summaries)
 
-
 for key in all_summaries:
     all_summaries_sentences[key] = read_summaries_into_sentences(all_summaries[key])
 
-def get_max_length():
-    val = 0
-    for key in all_docs_sentences:
-        for i in range(len(all_docs_sentences[key])):
-            if len(all_docs_sentences[key][i])>val:
-                val = len(all_docs_sentences[key][i])
-    return val
-
-for key in all_docs:
-    cosines = []
-    maxLength = get_max_length()
-    all_docs_sentences[key] = read_documents_into_sentences(all_docs[key])
-    for i in range(len(all_docs[key])):
-        x = vectorizer.fit_transform(all_docs_sentences[key][i])
-        for j in range(len(all_docs_sentences[key][i])):
-            sentence = all_docs_sentences[key][i][j]
-            x2 = vectorizer.transform([sentence])
-            y_train.append(check_summaries(key, i, j))
-            X_train.append([i, cosine_similarity(x, x2)[j]])
-
+get_train_data()
 
 ppn = Perceptron(n_iter=40, eta0=0.1, random_state=0)
 ppn.fit(X_train,y_train)
@@ -97,6 +100,7 @@ ppn.fit(X_train,y_train)
 
 y_pred = ppn.predict(X_train)
 print('Misclassified samples: %d' % (y_train != y_pred).sum())
+
 
 
 
