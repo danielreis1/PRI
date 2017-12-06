@@ -21,14 +21,16 @@ def read_doc_file(path_1, path_2=None):
     all_files = os.listdir(path_1)
     for fl in all_files:
         f1 = open(path_1 + '/' + fl, 'r')
-        content = f1.readline().decode('cp1252') + '.'  # primeira frase e' o titulo
-        content += f1.readline().decode('cp1252') + '.'  # segunda frase e' subtitulo
+        content = f1.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
+        f1.readline()
+        content += f1.readline().decode('cp1252') + '. '  # segunda frase e' subtitulo
         content += f1.read().decode('cp1252')
         all_docs.append(content)
         if path_2 is not None:
             f2 = open(path_2 + '/' + fl, 'r')
-            content = f2.readline().decode('cp1252') + '.'  # primeira frase e' o titulo
-            content += f2.readline().decode('cp1252') + '.'  # segunda frase e' subtitulo
+            content = f2.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
+            f2.readline()
+            content += f2.readline().decode('cp1252') + '. '  # segunda frase e' subtitulo
             content += f2.read().decode('cp1252')
             all_summaries.append(content)
     return all_docs, all_summaries
@@ -141,13 +143,14 @@ def PR_sentences_pos(doc, sent):
 
 def PR_EW_TFIDF(doc, sent):
     '''
-    :param vectorizer: vectorizer (fitted)
-    :param ele1: element 1
-    :param ele2: * 2
-    :return: cosine sims ele1 and ele2
+    both params must be a list
+    :param doc: list of sentences in a doc
+    :param sent: list with sentences
+    :return: cosine_sims between args
     '''
     '''
     works for edges and prior
+    
     '''
 
     vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
@@ -156,7 +159,7 @@ def PR_EW_TFIDF(doc, sent):
     x = vectorizer.transform(doc)
     x2 = vectorizer.transform(sent)
 
-    return cosine_similarity(x, x2)
+    return cosine_similarity(x, x2)[0][0]
 
 
 def PR_prob_NaiveBayes(doc, sent):
