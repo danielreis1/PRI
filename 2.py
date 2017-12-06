@@ -40,7 +40,7 @@ def rank(graphs, iterations=1):
                 print 'doc ' + str(cnt)
                 rankD = rank_doc(graphs[doc_number], prior, eWeight, iterations, doc_number)
                 rank_dicts.append(rankD.copy())
-            function_ranks.append(rank_dicts.copy())
+            function_ranks.append(rank_dicts[:])
     return function_ranks
 
 
@@ -57,7 +57,7 @@ def rank_doc(graph, prior, eWeight, iterations, doc_number):
             doc = [all_docs[doc_number]]
             doc_sentences = all_docs_sentences[doc_number]
             rank_function(rank_dict, int(key), graph, prior, eWeight, doc, doc_sentences)
-    return PR
+    return rank_dict
 
 
 def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_sentences, d=0.15):
