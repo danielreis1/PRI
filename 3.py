@@ -55,8 +55,8 @@ groups = ['Brasil' ,'Cotidiano', 'Dinheiro', 'Especial', 'Mundo', 'Opiniao', 'Tu
 all_docs = {}
 all_summaries = {}
 
-X = []
-y = []
+X_train = []
+y_train = []
 
 
 
@@ -80,41 +80,23 @@ def get_max_length():
 
 for key in all_docs:
     cosines = []
-    c=0
-    #print key
     maxLength = get_max_length()
     all_docs_sentences[key] = read_documents_into_sentences(all_docs[key])
-    x = vectorizer.fit_transform(all_docs_sentences[key])
     for i in range(len(all_docs[key])):
-        sentence = all_docs_sentences[key][i]
-        print [sentence]
-        x2 = vectorizer.transform([sentence])
-        #print 'grupo: ' + str(key) + ' doc ' + str(i) + ' frase ' + str(j)
-        #all_docs_sentences[key][i][j] = str(linear_kernel(x,x2).flatten()) + all_docs_sentences[key][i][j]
-        print 'doc: ' + str(i) + ' frase: ' + str(j)
-        print cosine_similarity(x2,x)
-        y.append(check_summaries(key, i, j))
+        x = vectorizer.fit_transform(all_docs_sentences[key][i])
+        for j in range(len(all_docs_sentences[key][i])):
+            sentence = all_docs_sentences[key][i][j]
+            x2 = vectorizer.transform([sentence])
+            y_train.append(check_summaries(key, i, j))
+            X_train.append([i, cosine_similarity(x, x2)[j]])
 
-#print y
 
 ppn = Perceptron(n_iter=40, eta0=0.1, random_state=0)
-ppn.fit(X,y)
+ppn.fit(X_train,y_train)
 
 
-y_pred = ppn.predict(X)
-print('Misclassified samples: %d' % (y != y_pred).sum())
-
-
-print '----------------------------------------------'
-for i in range(len(all_summaries_sentences['Brasil'][0])):
-    print 'frase' + str(i)
-    print all_summaries_sentences['Brasil'][0][i]
-print('---------------------------------------------')
-for i in range(len(all_docs_sentences['Brasil'][0])):
-    print 'frase' + str(i)
-    print all_docs_sentences['Brasil'][0][i]
-
-print check_summaries('Brasil', 0, 30)
+y_pred = ppn.predict(X_train)
+print('Misclassified samples: %d' % (y_train != y_pred).sum())
 
 
 
