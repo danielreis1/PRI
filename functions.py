@@ -19,19 +19,26 @@ def read_doc_file(path_1, path_2=None):
     all_docs = []
     all_summaries = []
     all_files = os.listdir(path_1)
+    content = ''
     for fl in all_files:
-        f1 = open(path_1 + '/' + fl, 'r')
-        content = f1.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
-        f1.readline()
-        content += f1.readline().decode('cp1252') + '. '  # segunda frase e' subtitulo
-        content += f1.read().decode('cp1252')
+        with open(path_1 + '/' + fl) as f1:
+            for line in f1:
+                line = line.decode('cp1252')
+                if line.strip() == '':
+                    continue
+                if '.' not in line:
+                    line = line + '.'
+                content += line
         all_docs.append(content)
         if path_2 is not None:
-            f2 = open(path_2 + '/' + fl, 'r')
-            content = f2.readline().decode('cp1252') + '. '  # primeira frase e' o titulo
-            f2.readline()
-            content += f2.readline().decode('cp1252') + '. '  # segunda frase e' subtitulo
-            content += f2.read().decode('cp1252')
+            with open(path_2 + '/' + fl) as f2:
+                for line in f2:
+                    line = line.decode('cp1252')
+                    if line.strip() == '':
+                        continue
+                    if '.' not in line:
+                        line = line + '.'
+                    content += line
             all_summaries.append(content)
     return all_docs, all_summaries
 
@@ -55,7 +62,7 @@ def clean_sentences(sentences):
         sentences[i] = sentences[i].replace('\n', '')
         sentences[i] = sentences[i].replace('\r', '')
         sentences[i] = sentences[i].replace('\t', '')
-        sentences[i].strip()
+        sentences[i] = sentences[i].strip()
         if sentences[i] == '':  # checks for empty string
             continue
         ret_sentences.append(sentences[i])

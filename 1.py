@@ -48,18 +48,18 @@ d = 0.15
 all_docs = [] #lista com os documentos todos
 all_docs_sentences = [] #lista com lista de frases de cada doc
 
-all_docs, all_summaries = read_doc_file('ex1') #TODO change this to read_doc_file
-all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
+all_docs, all_summaries = read_doc_file('ex1')
 
-'''
 print ('all_docs')
 print (all_docs)
 print('')
 
+all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
+
 print ('all_docs_sentences')
 print (all_docs_sentences)
 print('')
-'''
+
 
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
@@ -101,8 +101,8 @@ rank_dict = rank(graph, len(all_docs_sentences[0]), iterations=50)
 print rank_dict
 
 indexes = get_top5_from_dict(rank_dict)
-indexes.sort()
 indexes = [int(i) for i in indexes]
+indexes.sort()
 print(indexes)
 print
 
@@ -113,19 +113,11 @@ print rank_dict
 print
 
 indexes = get_top5_from_dict(rank_dict)
-indexes.sort()
 indexes = [int(i) for i in indexes]
+indexes.sort()
+
 print(indexes)
 for i in indexes:
     print
     print all_docs_sentences[0][i]
 
-
-print
-print ('all_docs')
-print (all_docs)
-print('')
-
-print ('all_docs_sentences')
-print (all_docs_sentences)
-print('')
