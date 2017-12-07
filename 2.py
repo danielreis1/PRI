@@ -13,7 +13,7 @@ all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 
 #2 dicionarios com as varias funcoes, depois for entre todas elas e representar cada uma diferente, {'nome_func': func}
 
-PR = {'tfidf': PR_TFIDF, 'sentences_pos': PR_sentences_pos} #'sentence_pos':PR_sentences_pos,
+PR = {'tfidf': PR_TFIDF, 'sentences_pos': PR_sentences_pos, 'bayes': PR_prob_NaiveBayes} #'sentence_pos':PR_sentences_pos,
 EW = {'tfidf': EW_TFIDF, 'nounP':EW_nounPhrases}
 vectorizer = 0
 
@@ -103,7 +103,9 @@ vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False
 vectorizer.fit(all_docs)
 
 graphs = createGraph(all_docs_sentences, all_docs, vectorizer)
-#print graphs
+for i in graphs:
+    print
+    print i
 
 ranks = rank(graphs)
 #print ranks
@@ -111,3 +113,4 @@ ranks = rank(graphs)
 for i in ranks:
     print
     print i
+

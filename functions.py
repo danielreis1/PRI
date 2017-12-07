@@ -1,7 +1,7 @@
 import nltk
 import os
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.corpus import mac_morpho
 from nltk.chunk import conlltags2tree, tree2conlltags
@@ -113,23 +113,68 @@ def addToGraph(graph, id, vals, doc, sentences):
     :return:
     adds an element to the graph
     '''
+
     sent = sentences[int(id)]
 
+    #
     vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
                                  stop_words=stopwords)
     x = vectorizer.fit_transform([doc])
     x2 = vectorizer.transform([sent])
-
     sim = cosine_similarity(x, x2)
     sent_doc_similarity_prior = sim[0][0]
 
-    position_doc_prior = float(1) / (int(id) +1)
+    #
+    position_doc_prior = float(1) / (int(id) + 1)
 
-    naive_bayes_prior = 0 #TODO
+    #
+    naive_bayes_prior = bayes_pr(doc, sent)
 
     graph[str(id)] = [vals.copy(), position_doc_prior, sent_doc_similarity_prior, naive_bayes_prior]
-
     return
+
+def bayes_pr(doc, sent):
+    '''
+
+    :param doc: document from which term frequencies are taken
+    :param sent: sentence that tells which terms are to be taken
+    :return: returns bayes
+    '''
+
+    vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 10), stop_words=stopwords)
+    x = vectorizer.fit_transform([doc]).toarray()
+    #x2 = vectorizer.transform([sent]).toarray()
+    tokenize_doc = nltk.word_tokenize(doc)
+    tokenize_phrase = nltk.word_tokenize(sent)
+    N = len(tokenize_doc)
+    '''
+    print
+    print 'check'
+    print 'tokenize_doc'
+    print tokenize_doc
+    print x[0]
+    print
+    print 'tokenize_phrase'
+    print tokenize_phrase
+    #print x2[0]
+    print
+    print N
+    print
+    '''
+    bayes = [1]
+    tokenize_phrase = [i.strip().lower() for i in tokenize_phrase]
+    for term_sent_index in range(len(tokenize_doc)):
+        term_sent = tokenize_doc[term_sent_index]
+        if term_sent.strip().lower() in tokenize_phrase:
+            temp_var = x[0][term_sent_index]
+            if temp_var == 0:
+                raise Exception('ERROR in bayes')
+            bayes.append(float(temp_var)/ N)
+
+    naive_bayes_prior = bayes[0]
+    for i in range(len(bayes)):
+        naive_bayes_prior = naive_bayes_prior * i
+    return naive_bayes_prior
 
 
 def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
@@ -306,4 +351,6 @@ def trainAndSaveTagger():
     dump(bi_tag,outfile2,-1)
     outfile2.close()
 
+
+#trainAndSaveTagger()
 tagger = loadtagger('biTagger')
