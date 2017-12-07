@@ -385,9 +385,8 @@ def trainAndSaveTagger():
     dump(bi_tag,outfile2,-1)
     outfile2.close()
 
-def saveGraph(graph):
-    outfile = open('graph.p', "wb")
-    dump(graph, outfile)
+def saveGraph(graph, file_name):
+    dump(graph, open(file_name + '.p', "wb"))
 
 
 def rank(graph, sentences_length, d, iterations=50): # rank for ex.1

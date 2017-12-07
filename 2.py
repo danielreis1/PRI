@@ -1,7 +1,7 @@
 from functions import *
 
 
-all_docs, all_summaries = read_doc_file('textoFontesTests') #TODO alterar para o correcto
+all_docs, all_summaries = read_doc_file('TextoFonteComTitulo') #TODO alterar para o correcto
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 
 #print all_docs_sentences
@@ -101,6 +101,11 @@ vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False
 vectorizer.fit(all_docs)
 
 graphs = createGraph(all_docs_sentences, all_docs, vectorizer)
+
+saveGraph(graphs, '2')
+print 'graph saved'
+graphs = loadtagger('2.p')
+
 for i in graphs:
     print
     print i
