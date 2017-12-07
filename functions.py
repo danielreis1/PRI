@@ -24,7 +24,9 @@ tagger = ''
 
 def read_doc_file(path_1, path_2=None):
     '''
-    ler todos os textos-fonte com titulo
+    :param path_1:
+    :param path_2:
+    :return:
     '''
 
     all_docs = []
@@ -43,6 +45,7 @@ def read_doc_file(path_1, path_2=None):
                 content += line
         all_docs.append(content)
         if path_2 is not None:
+            fl = 'Ext-' + fl
             with open(path_2 + '/' + fl) as f2:
                 for line in f2:
                     line = line.decode('cp1252')
@@ -436,17 +439,11 @@ def get_map(values):
     for i in range(len(values)):
         if values[i] == 1:
             count = count + 1
-            sum = sum + (count/(i+1))
+            sum = sum + (float(count)/(i+1))
     if sum == 0:
         return 0
-    return(sum/count)
+    return(float(sum)/count)
 
-
-def check_summaries_test(doc, frase, sentences, summaries):
-    if sentences[doc][frase] in summaries[doc][frase]:
-        return 1
-    else:
-        return 0
 
 
 #trainAndSaveTagger()

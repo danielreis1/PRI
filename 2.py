@@ -1,9 +1,9 @@
 from functions import *
 
 
-all_docs, all_summaries = read_doc_file('TextoFonteComTitulo') #TODO alterar para o correcto
+all_docs, all_summaries = read_doc_file('textoFontesTests', 'SummariesTests') #TODO alterar para o correcto
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
-
+all_summaries_sentences = read_documents_into_sentence_tokens(all_summaries)
 #print all_docs_sentences
 #print (all_sentences)
 
@@ -113,6 +113,8 @@ for i in graphs:
 ranks = rank(graphs)
 print ranks
 
+mySummary = []
+
 for funcs_index in range(len(ranks)):
     print functions[funcs_index]
     for i_doc in range(len(ranks[funcs_index])):
@@ -123,6 +125,30 @@ for funcs_index in range(len(ranks)):
         indexes = get_top5_from_dict(dict)
         indexes = [int(i) for i in indexes]
         indexes.sort()
+        mySummary.append(all_docs_sentences[int(i_doc)])
         for i_sent in indexes:
             print all_docs_sentences[int(i_doc)][int(i_sent)]
+
+mapValues = []
+
+for mySumDoci in range(len(mySummary)):
+    mysum = mySummary[mySumDoci]
+    for mS in mySummary[mySumDoci]:
+        mapVals = []
+        if mS in all_summaries_sentences:
+            mapVals.append(1)
+        else:
+            mapVals.append(0)
+    mapValues.append(mapVals[:])
+
+cnt = 0
+for mapV in mapValues:
+    cnt += 1
+    print 'map '+ cnt
+    print get_map(mapValues)
+    print
+
+
+
+
 
