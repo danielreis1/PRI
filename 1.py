@@ -21,7 +21,7 @@ def rank(graph, sentences_length, iterations=50): # rank for ex.1
         for key in graph: # keys are sentences index in document
             rank_function(N, rank_dict, graph, key, d)
 
-    return rank_dict
+    return rank_dict.copy()
 
 def rank_function(N, rank_dict, graph, key, d=0.15):
     '''
@@ -64,7 +64,7 @@ print('')
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
 graphs = createGraph(all_docs_sentences, all_docs, vectorizer, 0.2)
-graph = graphs[0]
+graph = graphs[0].copy()
 
 print 'graph'
 print (graph)
