@@ -138,6 +138,9 @@ for mySumDoci in range(len(mySummary)):
     mysum = mySummary[mySumDoci]
     for mS in mySummary[mySumDoci]:
         mapVals = []
+        print 'mS'
+        print mS
+        print
         if mS in all_summaries_sentences:
             mapVals.append(1)
         else:
@@ -147,6 +150,6 @@ for mySumDoci in range(len(mySummary)):
 cnt = 0
 for mapV in mapValues:
     print 'map for doc number: ' + str(cnt)
-    get_map(mapV)
+    print get_map(mapV)
     print
     cnt += 1

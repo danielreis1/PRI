@@ -450,8 +450,6 @@ def get_map(values):
         return 0
     res = float(sum)/count
     print 'res'
-    print res
-    print
     return res
 
 
