@@ -3,11 +3,11 @@
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/parseXML.py" line="13" />
     <bookmark url="file://$PROJECT_DIR$/parseXML.py" line="49" />
+    <bookmark url="file://$PROJECT_DIR$/functions.py" line="145" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85785fc7-baba-474f-ab79-0b36d199ca4b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/2.py" afterPath="$PROJECT_DIR$/2.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1.py" afterPath="$PROJECT_DIR$/1.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functions.py" afterPath="$PROJECT_DIR$/functions.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,18 +22,18 @@
       <file leaf-file-name="1.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="78" column="30" lean-forward="true" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
+            <state relative-caret-position="390">
+              <caret line="62" column="9" lean-forward="false" selection-start-line="62" selection-start-column="9" selection-end-line="62" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="functions.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="functions.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1251">
-              <caret line="126" column="5" lean-forward="true" selection-start-line="126" selection-start-column="5" selection-end-line="126" selection-end-column="5" />
+            <state relative-caret-position="-45">
+              <caret line="173" column="0" lean-forward="true" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -41,7 +41,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="2.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/2.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
@@ -112,8 +112,8 @@
       <file leaf-file-name="exercise-3.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../proj/exercise-3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="321">
-              <caret line="283" column="32" lean-forward="true" selection-start-line="283" selection-start-column="32" selection-end-line="283" selection-end-column="42" />
+            <state relative-caret-position="231">
+              <caret line="283" column="42" lean-forward="true" selection-start-line="283" selection-start-column="42" selection-end-line="283" selection-end-column="42" />
               <folding>
                 <element signature="e#115#169#0" expanded="true" />
               </folding>
@@ -132,10 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>PR</find>
-      <find>read_documents_into_sentence_tokens</find>
-      <find>[0]</find>
-      <find>load</find>
       <find>tagList</find>
       <find>getNPs</find>
       <find>getPR</find>
@@ -147,7 +143,6 @@
       <find>doc</find>
       <find>loadtagger</find>
       <find>getNP_from_sent</find>
-      <find>cos_sims</find>
       <find>sent</find>
       <find>print</find>
       <find>process</find>
@@ -162,6 +157,11 @@
       <find>freq</find>
       <find>countVEc</find>
       <find>tokenize</find>
+      <find>cos_sims</find>
+      <find>countvec</find>
+      <find>tfidf</find>
+      <find>cos_si</find>
+      <find>cos_sim</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -173,10 +173,10 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/../proj/exercise_2.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/1.py" />
         <option value="$PROJECT_DIR$/parseXML.py" />
-        <option value="$PROJECT_DIR$/functions.py" />
         <option value="$PROJECT_DIR$/2.py" />
+        <option value="$PROJECT_DIR$/1.py" />
+        <option value="$PROJECT_DIR$/functions.py" />
       </list>
     </option>
   </component>
@@ -812,24 +812,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Summaries/Sum-ce94ab10-a.txt" />
-    <entry file="file://$PROJECT_DIR$/1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="78" column="30" lean-forward="true" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../proj/exercise-3.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="283" column="32" lean-forward="true" selection-start-line="283" selection-start-column="32" selection-end-line="283" selection-end-column="42" />
-          <folding>
-            <element signature="e#115#169#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../proj/exercise_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="188">
@@ -878,12 +860,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functions.py">
+    <entry file="file://$PROJECT_DIR$/1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1251">
-          <caret line="126" column="5" lean-forward="true" selection-start-line="126" selection-start-column="5" selection-end-line="126" selection-end-column="5" />
+        <state relative-caret-position="390">
+          <caret line="62" column="9" lean-forward="false" selection-start-line="62" selection-start-column="9" selection-end-line="62" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../proj/exercise-3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="283" column="42" lean-forward="true" selection-start-line="283" selection-start-column="42" selection-end-line="283" selection-end-column="42" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#115#169#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -893,6 +883,16 @@
         <state relative-caret-position="504">
           <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-45">
+          <caret line="173" column="0" lean-forward="true" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

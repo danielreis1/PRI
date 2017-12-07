@@ -2,7 +2,9 @@ import nltk
 import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy import sparse
 from nltk.corpus import mac_morpho
 from nltk.chunk import conlltags2tree, tree2conlltags
 from nltk import UnigramTagger as ut
@@ -77,10 +79,13 @@ def clean_sentences(sentences):
     return ret_sentences
 
 
-def cos_sims(x, x2, sentences, self_index, thresholdCS, np):
+def cos_sims(x, x2, sentences, doc, self_index, thresholdCS, np):
     '''
-    :param x: sparseMatrix with all sentences transform
+    :param x: sparseMatrix with doc transform
     :param x2: sparseM with 1 sentence transform
+    :param sentences: sent's in doc
+    :param self_index: index of phrase being analyzed
+    :param np: noun phrases of sentence being analyzed
     :param thresholdCS: if value is provided returns only cosine_sims above the given threshold value
     :return: {'id':[cosine_sim, noun_phrases, SVD_sims]}
     returns list with indexes of the phrases with a cosine similarity above threshold
@@ -93,15 +98,52 @@ def cos_sims(x, x2, sentences, self_index, thresholdCS, np):
         number_NP = 0
         if i != self_index:
             if cosine_sims[i][0] > thresholdCS:
+                #cosine sims
                 conected[str(i)] = [cosine_sims[i][0]]
+
+                #noun P
                 np2 = getNP_from_sent(sentences[i])
                 for n in np2:
                     if n in np:
                         number_NP+=1
                 conected[str(i)].append(number_NP)
 
+                #svd
+                #svd_num = svd_ew(sentences, self_index, i)
+                #conected[str(i)].append(svd_num)
 
     return conected.copy()
+
+
+def svd_ew(sentences, sent1_index, sent2_index):
+    '''
+
+    :param sentences: all sentences in doc
+    :param sent1_index: sentence being analyzed
+    :param sent2_index: sentence(link) of the sentence being analyzed
+    :return:
+    '''
+
+    #vectorizer = CountVectorizer(analyzer='word', stop_words=stopwords)
+    # sent1 = sentences[sent1_index]
+    # sent2 = sentences[sent2_index]
+    sents = [nltk.sent_tokenize(sentence) for sentence in sentences]
+    vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
+                                 stop_words=stopwords)
+    sparse_m = vectorizer.fit_transform(sentences)  # .toarray() # term frequency in doc
+
+    svd = TruncatedSVD(n_components=100, n_iter=5)
+    dense_m = svd.fit_transform(sparse_m)
+
+    sent1_trans = sparse.csr_matrix(dense_m[sent1_index])
+    sent2_trans = sparse.csr_matrix(dense_m[sent2_index])
+
+    sim = cosine_similarity(sent1_trans, sent2_trans)
+    sent_doc_similarity_prior = sim[0][0]
+    print sent_doc_similarity_prior
+
+
+    return sent_doc_similarity_prior
 
 
 def addToGraph(graph, id, vals, doc, sentences):
@@ -133,6 +175,7 @@ def addToGraph(graph, id, vals, doc, sentences):
     graph[str(id)] = [vals.copy(), position_doc_prior, sent_doc_similarity_prior, naive_bayes_prior]
     return
 
+
 def bayes_pr(doc, sent):
     '''
 
@@ -141,7 +184,7 @@ def bayes_pr(doc, sent):
     :return: returns bayes
     '''
 
-    vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 10), stop_words=stopwords)
+    vectorizer = CountVectorizer(analyzer='word', stop_words=stopwords)
     x = vectorizer.fit_transform([doc]).toarray()
     #x2 = vectorizer.transform([sent]).toarray()
     tokenize_doc = nltk.word_tokenize(doc)
@@ -203,7 +246,7 @@ def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
             sent = sentences[i]
             x2 = vectorizer.transform([sent])
             nP = getNP_from_sent(sent)
-            indexes = cos_sims(x, x2, sentences, i, thresholdCS, nP)
+            indexes = cos_sims(x, x2, sentences, doc, i, thresholdCS, nP)
             addToGraph(graph, i, indexes, doc, sentences)
         graphs.append(graph.copy())
     return graphs

@@ -50,16 +50,18 @@ all_docs = [] #lista com os documentos todos
 all_docs_sentences = [] #lista com lista de frases de cada doc
 
 all_docs, all_summaries = read_doc_file('ex1')
-
+'''
 print ('all_docs')
 print (all_docs)
 print('')
+'''
 
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
-
+'''
 print ('all_docs_sentences')
 print (all_docs_sentences)
 print('')
+'''
 
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
