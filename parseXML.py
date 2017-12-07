@@ -28,14 +28,16 @@ for site in sites:
     #print ('site ' + str(cnt))
     for entry in entries:
         #links = {site : entry['link']}
+        titles_source = {entry['link'] : entry['title']}
+        #titles = list(titles_source.values())[0]
         if 'content' in entry:
-        	texts = {entry['title'] : entry['content'][0]['value']}
+        	content = remove_tags(entry['content'][0]['value']) # tira tags HTML
+        	#content = remove_tags(re.sub('\.{3}', '', entry['content'][0]['value'])) # tira tags HTML e reticencias
+        	texts = {entry['title'] : content} # nao pode ser assim. ha titles e content vazios
         	#print ('TEM\t' + entry['link'])
-        else:
-        	#print()
-        	#print ('NÃO TEM')
-        	###### VERIFICAR SE TODOS TÊM summary assim. só confirmei para NYT
-        	texts = {entry['title'] : entry['summary']}
+        else:# todos tem summary
+        	summary = remove_tags(entry['summary']) # tira tags HTML e reticencias
+        	texts = {entry['title'] : summary}
         	'''
         	for k in list(entry.keys()):
         		print('\n *** ' + k + ' *** ')
