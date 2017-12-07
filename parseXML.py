@@ -19,17 +19,31 @@ def remove_tags(text):
 
 cnt = 0
 for site in sites:
-    #print('\n\t***\t' + site + '\t***\t')
+    print('\n\t***\t' + site + '\t***\t')
     d[site] = feedparser.parse(site)
     entries = d[site]['entries']
-    print entries
-    print
+    #print (entries)
+    #print()
     cnt += 1
-    print 'site ' + str(cnt)
+    #print ('site ' + str(cnt))
     for entry in entries:
         #links = {site : entry['link']}
-        texts = {entry['title'] : entry['content'][0]['value']}
-        print texts
+        if 'content' in entry:
+        	texts = {entry['title'] : entry['content'][0]['value']}
+        	#print ('TEM\t' + entry['link'])
+        else:
+        	#print()
+        	#print ('NÃO TEM')
+        	###### VERIFICAR SE TODOS TÊM summary assim. só confirmei para NYT
+        	texts = {entry['title'] : entry['summary']}
+        	'''
+        	for k in list(entry.keys()):
+        		print('\n *** ' + k + ' *** ')
+        		print(entry[k])
+        	'''
+        	#print (list(entry.keys()))
+        	#print (entry['title'])
+        	#print (entry['title_detail'])
 
-
+        print (texts)
 
