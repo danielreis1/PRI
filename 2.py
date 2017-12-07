@@ -14,7 +14,7 @@ all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 #2 dicionarios com as varias funcoes, depois for entre todas elas e representar cada uma diferente, {'nome_func': func}
 
 PR = {'tfidf': PR_TFIDF, 'sentences_pos': PR_sentences_pos, 'bayes': PR_prob_NaiveBayes} #'sentence_pos':PR_sentences_pos,
-EW = {'tfidf': EW_TFIDF, 'nounP':EW_nounPhrases}
+EW = {'tfidf': EW_TFIDF, 'nounP':EW_nounPhrases, 'svd': EW_SVD}
 vectorizer = 0
 
 #print noun_phrases

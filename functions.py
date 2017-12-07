@@ -109,8 +109,8 @@ def cos_sims(x, x2, sentences, doc, self_index, thresholdCS, np):
                 conected[str(i)].append(number_NP)
 
                 #svd
-                #svd_num = svd_ew(sentences, self_index, i)
-                #conected[str(i)].append(svd_num)
+                svd_num = svd_ew(sentences, self_index, i)
+                conected[str(i)].append(svd_num)
 
     return conected.copy()
 
@@ -140,8 +140,6 @@ def svd_ew(sentences, sent1_index, sent2_index):
 
     sim = cosine_similarity(sent1_trans, sent2_trans)
     sent_doc_similarity_prior = sim[0][0]
-    print sent_doc_similarity_prior
-
 
     return sent_doc_similarity_prior
 
@@ -186,9 +184,13 @@ def bayes_pr(doc, sent):
 
     vectorizer = CountVectorizer(analyzer='word', stop_words=stopwords)
     x = vectorizer.fit_transform([doc]).toarray()
-    #x2 = vectorizer.transform([sent]).toarray()
-    tokenize_doc = nltk.word_tokenize(doc)
-    tokenize_phrase = nltk.word_tokenize(sent)
+    vectorizer2 = CountVectorizer(analyzer='word', stop_words=stopwords)
+    vectorizer2.fit([sent])
+
+
+    tokenize_doc = vectorizer.get_feature_names()
+    tokenize_phrase = vectorizer2.get_feature_names()
+
     N = len(tokenize_doc)
     '''
     print
@@ -209,9 +211,6 @@ def bayes_pr(doc, sent):
     for term_sent_index in range(len(tokenize_doc)):
         term_sent = tokenize_doc[term_sent_index]
         if term_sent.strip().lower() in tokenize_phrase:
-            print x.shape
-            print x[0]
-            print term_sent_index
             temp_var = x[0][term_sent_index]
             if temp_var == 0:
                 raise Exception('ERROR in bayes')
