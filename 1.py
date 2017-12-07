@@ -15,7 +15,7 @@ def rank(graph, sentences_length, iterations=50): # rank for ex.1
 
     # initialize rank_dict
     for i in graph:
-        rank_dict[str(i)] = float(1/N)
+        rank_dict[str(i)] = float(1)/N
 
     for i in range(iterations):
         for key in graph: # keys are sentences index in document

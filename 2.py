@@ -56,7 +56,7 @@ def rank_doc(graph, prior, eWeight, iterations, doc_number):
     N = len(all_docs_sentences[doc_number])
 
     for i in graph:
-        rank_dict[str(i)] = float(1/N)
+        rank_dict[str(i)] = float(1)/N
         #print i
 
     for i in range(iterations):
@@ -88,9 +88,9 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
             link_of_link = int(link_of_link)
             sumLinkWeights += getEW(eWeight)(graph, link, link_of_link)
 
-        sume += float(PR * weight / sumLinkWeights)
+        sume += float(PR) * weight / sumLinkWeights
 
-    rank_dict[sent_number] = float(d * prior / sumPrior) + (1 - d) * sume
+    rank_dict[sent_number] = float(d) * prior / sumPrior + (1 - d) * sume
 
 
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)

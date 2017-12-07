@@ -129,7 +129,7 @@ def addToGraph(graph, id, vals, doc, sentences):
     sim = cosine_similarity(x, x2)
     sent_doc_similarity_prior = sim[0][0]
 
-    position_doc_prior = float(1 / (int(id) +1))
+    position_doc_prior = float(1) / (int(id) +1)
 
     naive_bayes_prior = 0 #TODO
 
