@@ -70,17 +70,11 @@ def read_documents_into_sentence_tokens(all_docs):
 def clean_sentences(sentences):
     ret_sentences = []
     for i in range(len(sentences)):
-        sentences[i] = sentences[i].replace('\n', '')
-        sentences[i] = sentences[i].replace('\r', '')
-        sentences[i] = sentences[i].replace('\t', '')
         sentences[i] = sentences[i].strip()
         if sentences[i] == '':  # checks for empty string
             continue
         ret_sentences.append(sentences[i])
     return ret_sentences
-
-
-
 
 
 def cos_sims(x, x2, sentences, self_index, thresholdCS, np):
@@ -221,7 +215,7 @@ def EW_nounPhrases(graph, s1, s2):
     :return:
     '''
 
-    return graph[str(s1)][0][str(s2)][1] + 1
+    return graph[str(s1)][0][str(s2)][1]
 
 
 def EW_SVD(graph, s1, s2):

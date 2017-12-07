@@ -73,8 +73,11 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
     #print prior
 
     sumPrior = 0
-    for i in graph: # sums over all elements in the doc (graph)
-        sumPrior += getPR(prior_func)(graph[i])
+    if prior != 0:
+        for i in graph: # sums over all elements in the doc (graph)
+            sumPrior += getPR(prior_func)(graph[i])
+    else:
+        sumPrior = 1
 
     sume = 0
 
@@ -84,9 +87,12 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
         link_sent = doc_sentences[link]
         weight = getEW(eWeight)(graph, link, sent_number)
         sumLinkWeights = 0
-        for link_of_link in graph[str(link)][0]:
-            link_of_link = int(link_of_link)
-            sumLinkWeights += getEW(eWeight)(graph, link, link_of_link)
+        if weight != 0:
+            for link_of_link in graph[str(link)][0]:
+                link_of_link = int(link_of_link)
+                sumLinkWeights += getEW(eWeight)(graph, link, link_of_link)
+        else:
+            sumLinkWeights = 1
 
         sume += float(PR) * weight / sumLinkWeights
 
