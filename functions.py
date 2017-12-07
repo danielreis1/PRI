@@ -22,7 +22,7 @@ stopwordsE = nltk.corpus.stopwords.words('english')
 tagger = ''
 
 
-def read_doc_file(path_1, path_2=None):
+def read_doc_file(path_1, type=1, path_2=None):
     '''
     :param path_1:
     :param path_2:
@@ -36,7 +36,10 @@ def read_doc_file(path_1, path_2=None):
     for fl in all_files:
         with open(path_1 + '/' + fl) as f1:
             for line in f1:
-                line = line.decode('cp1252')
+                if type == 1:
+                    line = line.decode('cp1252')
+                else:
+                    line = line
                 line = line.lower()
                 if line.strip() == '':
                     continue
@@ -48,7 +51,10 @@ def read_doc_file(path_1, path_2=None):
             fl = 'Ext-' + fl
             with open(path_2 + '/' + fl) as f2:
                 for line in f2:
-                    line = line.decode('cp1252')
+                    if type == 1:
+                        line = line.decode('cp1252')
+                    else:
+                        line = line
                     line = line.lower()
                     if line.strip() == '':
                         continue
@@ -439,10 +445,14 @@ def get_map(values):
     for i in range(len(values)):
         if values[i] == 1:
             count = count + 1
-            sum = sum + (float(count)/(i+1))
+            sum += (float(count)/(i+1))
     if sum == 0:
         return 0
-    return(float(sum)/count)
+    res = float(sum)/count
+    print 'res'
+    print res
+    print
+    return res
 
 
 

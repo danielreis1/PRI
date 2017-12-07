@@ -1,7 +1,7 @@
 from functions import *
 
 
-all_docs, all_summaries = read_doc_file('textoFontesTests', 'SummariesTests') #TODO alterar para o correcto
+all_docs, all_summaries = read_doc_file('textoFontesTests', path_2='SummariesTests')
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 all_summaries_sentences = read_documents_into_sentence_tokens(all_summaries)
 #print all_docs_sentences
@@ -100,10 +100,13 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
 
-graphs = createGraph(all_docs_sentences, all_docs, vectorizer)
+print 'graphs werent save'
+print
+#graphs = createGraph(all_docs_sentences, all_docs, vectorizer)
+#saveGraph(graphs, '2')
+#print 'graph saved'
 
-saveGraph(graphs, '2')
-print 'graph saved'
+
 graphs = loadtagger('2.p')
 
 for i in graphs:
@@ -143,12 +146,7 @@ for mySumDoci in range(len(mySummary)):
 
 cnt = 0
 for mapV in mapValues:
-    cnt += 1
-    print 'map '+ cnt
-    print get_map(mapValues)
+    print 'map for doc number: ' + str(cnt)
+    get_map(mapV)
     print
-
-
-
-
-
+    cnt += 1

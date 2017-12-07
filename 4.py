@@ -1,7 +1,7 @@
 from functions import *
 
 
-all_docs, all_summaries = read_doc_file('ex4')
+all_docs, all_summaries = read_doc_file('ex4', type=0)
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 d = 0.15
 
