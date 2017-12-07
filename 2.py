@@ -28,7 +28,7 @@ def getEW(func_name):
     return EW[func_name]
 
 
-def rank(graphs, iterations=5):
+def rank(graphs, iterations=50):
     '''
     :param graphs: all graphs
     :param iterations:
@@ -68,8 +68,8 @@ def rank_doc(graph, prior, eWeight, iterations, doc_number):
 
 
 def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_sentences, d=0.15):
-    sent = doc_sentences[sent_number]
-    prior = getPR(prior_func)(graph[sent_number])
+
+    prior = getPR(prior_func)(graph[str(sent_number)])
     #print prior
 
     sumPrior = 0
@@ -82,11 +82,11 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
         link = int(link)
         PR = rank_dict[str(sent_number)]
         link_sent = doc_sentences[link]
-        weight = getEW(eWeight)(graph[0], link, sent_number)
+        weight = getEW(eWeight)(graph, link, sent_number)
         sumLinkWeights = 0
         for link_of_link in graph[str(link)][0]:
             link_of_link = int(link_of_link)
-            sumLinkWeights += getEW(eWeight)(graph[0], link, link_of_link)
+            sumLinkWeights += getEW(eWeight)(graph, link, link_of_link)
 
         sume += float(PR * weight / sumLinkWeights)
 
@@ -96,9 +96,12 @@ def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_s
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
 
-graphs = createGraph(all_docs_sentences, vectorizer)
-print graphs
+graphs = createGraph(all_docs_sentences, all_docs, vectorizer)
+#print graphs
 
 ranks = rank(graphs)
-print ranks
+#print ranks
 
+for i in ranks:
+    print
+    print i

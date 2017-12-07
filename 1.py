@@ -35,7 +35,7 @@ def rank_function(N, rank_dict, graph, key, d=0.15):
     for i in graph[key][0]: # i are keys of dictionary - i is sentence number in a doc
         iter_key = str(i)
         pr = rank_dict[iter_key] #prev rank
-        links = len(graph[str(iter_key)])
+        links = len(graph[str(iter_key)][0])
         sum += float(pr)/links
 
     rank_dict[key] = float(d)/N + (1-d) * sum
@@ -63,7 +63,7 @@ print('')
 
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
-graphs = createGraph(all_docs_sentences, vectorizer, 0.2)
+graphs = createGraph(all_docs_sentences, all_docs, vectorizer, 0.2)
 graph = graphs[0]
 
 print 'graph'

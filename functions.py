@@ -24,6 +24,7 @@ def read_doc_file(path_1, path_2=None):
     '''
     ler todos os textos-fonte com titulo
     '''
+
     all_docs = []
     all_summaries = []
     all_files = os.listdir(path_1)
@@ -79,21 +80,7 @@ def clean_sentences(sentences):
     return ret_sentences
 
 
-def addToGraph(graph, id, vals):
-    '''
-    :param graph:
-    :param id: index da frase na lista de frases
-    :param vals: valores do grafo, pode ser uma lista com features ou uma feature so:
-      ex: indexes na lista de frases cujas frases ultrapassam a threshold de semelhanca
-    :return:
-    adds an element to the graph
-    '''
 
-
-
-    graph[str(id)] = [vals.copy(),]
-
-    return
 
 
 def cos_sims(x, x2, sentences, self_index, thresholdCS, np):
@@ -123,7 +110,35 @@ def cos_sims(x, x2, sentences, self_index, thresholdCS, np):
     return conected.copy()
 
 
-def createGraph(elements, vectorizer, thresholdCS=0.2):
+def addToGraph(graph, id, vals, doc, sentences):
+    '''
+    :param graph:
+    :param id: index da frase na lista de frases
+    :param vals: valores do grafo, pode ser uma lista com features ou uma feature so:
+      ex: indexes na lista de frases cujas frases ultrapassam a threshold de semelhanca
+    :return:
+    adds an element to the graph
+    '''
+    sent = sentences[int(id)]
+
+    vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
+                                 stop_words=stopwords)
+    x = vectorizer.fit_transform([doc])
+    x2 = vectorizer.transform([sent])
+
+    sim = cosine_similarity(x, x2)
+    sent_doc_similarity_prior = sim[0][0]
+
+    position_doc_prior = float(1 / (int(id) +1))
+
+    naive_bayes_prior = 0 #TODO
+
+    graph[str(id)] = [vals.copy(), position_doc_prior, sent_doc_similarity_prior, naive_bayes_prior]
+
+    return
+
+
+def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
     '''
     :param elements: sentences in all docs
     :param thresholdCS:
@@ -142,6 +157,7 @@ def createGraph(elements, vectorizer, thresholdCS=0.2):
     graphs = []
     for sentences_index in range(len(elements)): # sentences variable is senteces in a document
         sentences = elements[sentences_index]
+        doc = docs[sentences_index]
         graph = {}
         x = vectorizer.transform(sentences)
         for i in range(len(sentences)):
@@ -149,7 +165,7 @@ def createGraph(elements, vectorizer, thresholdCS=0.2):
             x2 = vectorizer.transform([sent])
             nP = getNP_from_sent(sent)
             indexes = cos_sims(x, x2, sentences, i, thresholdCS, nP)
-            addToGraph(graph, i, indexes)
+            addToGraph(graph, i, indexes, doc, sentences)
         graphs.append(graph.copy())
     return graphs
 
@@ -163,50 +179,26 @@ def get_top5_from_dict(D):
     #print(sort)
     return sort
 
-def sent_pos():
-
 
 def PR_sentences_pos(graph_list):
-    '''
-    :param sent_number: number of sentence in a doc
-    :return: 1/sent_number
-    '''
+
     indexes, pos, cos_sim, bayes = graph_list
 
-    sent_num = arg_list[0]
-    return float(1/(sent_num + 1))
+    return pos
 
 
 def PR_TFIDF(graph_list):
-    '''
-    :param arg_list:
-    :return:
-    '''
+
     indexes, pos, cos_sim, bayes = graph_list
 
-    doc = arg_list[1]
-    sent = arg_list[2]
-
-    vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
-                                 stop_words=stopwords)
-    x = vectorizer.fit_transform([doc])
-    x2 = vectorizer.transform([sent])
-
-    sim = cosine_similarity(x, x2)
-    return sim[0][0]
-
-    return
+    return cos_sim
 
 
 def PR_prob_NaiveBayes(graph_list):
-    '''
-    :param arg_list:
-    :return:
-    '''
+
     indexes, pos, cos_sim, bayes = graph_list
 
-
-    return
+    return bayes
 
 
 def EW_TFIDF(graph, s1, s2):
@@ -217,7 +209,7 @@ def EW_TFIDF(graph, s1, s2):
     :return: TFIDF between both sentences in the doc
     '''
 
-    return graph[str(s1)][str(s2)][0]
+    return graph[str(s1)][0][str(s2)][0]
 
 
 def EW_nounPhrases(graph, s1, s2):
@@ -229,7 +221,7 @@ def EW_nounPhrases(graph, s1, s2):
     :return:
     '''
 
-    return graph[str(s1)][str(s2)][1]
+    return graph[str(s1)][0][str(s2)][1] + 1
 
 
 def EW_SVD(graph, s1, s2):
@@ -241,7 +233,7 @@ def EW_SVD(graph, s1, s2):
     :return:
     '''
 
-    return graph[str(s1)][str(s2)][2]
+    return graph[str(s1)][0][str(s2)][2]
 
 
 def getNPs(tagList):
