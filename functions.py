@@ -124,10 +124,6 @@ def svd_ew(sentences, sent1_index, sent2_index):
     :return:
     '''
 
-    #vectorizer = CountVectorizer(analyzer='word', stop_words=stopwords)
-    # sent1 = sentences[sent1_index]
-    # sent2 = sentences[sent2_index]
-    sents = [nltk.sent_tokenize(sentence) for sentence in sentences]
     vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True,
                                  stop_words=stopwords)
     sparse_m = vectorizer.fit_transform(sentences)  # .toarray() # term frequency in doc
@@ -184,28 +180,19 @@ def bayes_pr(doc, sent):
 
     vectorizer = CountVectorizer(analyzer='word', stop_words=stopwords)
     x = vectorizer.fit_transform([doc]).toarray()
-    vectorizer2 = CountVectorizer(analyzer='word', stop_words=stopwords)
-    vectorizer2.fit([sent])
-
-
     tokenize_doc = vectorizer.get_feature_names()
-    tokenize_phrase = vectorizer2.get_feature_names()
+
+    vectorizer2 = CountVectorizer(analyzer='word', stop_words=stopwords)
+    try:
+        vectorizer2.fit([sent])
+        tokenize_phrase = vectorizer2.get_feature_names()
+    except Exception:
+        print 'empty phrase'
+        tokenize_phrase = []
 
     N = len(tokenize_doc)
-    '''
-    print
-    print 'check'
-    print 'tokenize_doc'
-    print tokenize_doc
-    print x[0]
-    print
-    print 'tokenize_phrase'
-    print tokenize_phrase
-    #print x2[0]
-    print
-    print N
-    print
-    '''
+
+
     bayes = [1]
     tokenize_phrase = [i.strip().lower() for i in tokenize_phrase]
     for term_sent_index in range(len(tokenize_doc)):
@@ -224,6 +211,7 @@ def bayes_pr(doc, sent):
 
 def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
     '''
+    :param algs: [0] -> bayes on/off [1] -> svd on/off
     :param elements: sentences in all docs
     :param thresholdCS:
     :param vectorizer: vectorizer with fitted vocabulary
@@ -251,6 +239,7 @@ def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
             indexes = cos_sims(x, x2, sentences, doc, i, thresholdCS, nP)
             addToGraph(graph, i, indexes, doc, sentences)
         graphs.append(graph.copy())
+        print 'graph'
     return graphs
 
 
@@ -395,6 +384,47 @@ def trainAndSaveTagger():
     outfile2 = open('biTagger','wb')
     dump(bi_tag,outfile2,-1)
     outfile2.close()
+
+
+def rank(graph, sentences_length, d, iterations=50): # rank for ex.1
+    '''
+    :param graph:
+    :param iterations: number of iterations when ranking
+    :param sentences_length: length of sentences in the document being ranked
+    :return: dictionary with: 'sentence_number': rank , for all items in the graph
+    '''
+
+    rank_dict = {}
+    N = sentences_length
+
+    # initialize rank_dict
+    for i in graph:
+        rank_dict[str(i)] = float(1)/N
+
+    for i in range(iterations):
+        for key in graph: # keys are sentences index in document
+            rank_function(N, rank_dict, graph, key, d)
+
+    return rank_dict.copy()
+
+def rank_function(N, rank_dict, graph, key, d=0.15):
+    '''
+    :param N: number sentences
+    :param rank_dict: dictionary with 'index': rank
+    :param d:
+    :return: return rank_dict
+    '''
+
+    sum = 0
+    for i in graph[key][0]: # i are keys of dictionary - i is sentence number in a doc
+        iter_key = str(i)
+        pr = rank_dict[iter_key] #prev rank
+        links = len(graph[str(iter_key)][0])
+        sum += float(pr)/links
+
+    rank_dict[key] = float(d)/N + (1-d) * sum
+
+    return rank_dict
 
 
 #trainAndSaveTagger()

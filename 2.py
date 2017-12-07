@@ -1,9 +1,5 @@
 from functions import *
 
-'''
-used tagger from project 1, created in project 1 exercise 3 line 242
-'''
-
 
 all_docs, all_summaries = read_doc_file('textoFontesTests') #TODO alterar para o correcto
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
@@ -16,6 +12,7 @@ all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 PR = {'tfidf': PR_TFIDF, 'sentences_pos': PR_sentences_pos, 'bayes': PR_prob_NaiveBayes} #'sentence_pos':PR_sentences_pos,
 EW = {'tfidf': EW_TFIDF, 'nounP':EW_nounPhrases, 'svd': EW_SVD}
 vectorizer = 0
+functions = []
 
 #print noun_phrases
 
@@ -40,6 +37,7 @@ def rank(graphs, iterations=50):
 
     for prior in PR:
         for eWeight in EW:
+            functions.append((prior, eWeight))
             rank_dicts = []
             cnt = 0
             for doc_number in range(len(graphs)):
@@ -110,7 +108,16 @@ for i in graphs:
 ranks = rank(graphs)
 #print ranks
 
-for i in ranks:
-    print
-    print i
+for funcs_index in range(len(ranks)):
+    print functions[funcs_index]
+    for i_doc in range(len(ranks[funcs_index])):
+        for d in ranks[funcs_index]:
+            print
+            indexes = get_top5_from_dict(d)
+            indexes = [int(i) for i in indexes]
+            indexes.sort()
+            for i_sent in indexes:
+                print all_docs_sentences[i_doc][i_sent]
+
+
 
