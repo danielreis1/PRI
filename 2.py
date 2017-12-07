@@ -1,5 +1,10 @@
 from functions import *
 
+'''
+used tagger from project 1, created in project 1 exercise 3 line 242
+'''
+
+
 all_docs, all_summaries = read_doc_file('textoFontesTests') #TODO alterar para o correcto
 all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 
@@ -8,9 +13,11 @@ all_docs_sentences = read_documents_into_sentence_tokens(all_docs)
 
 #2 dicionarios com as varias funcoes, depois for entre todas elas e representar cada uma diferente, {'nome_func': func}
 
-PR = {'tfidf': PR_EW_TFIDF} #'sentence_pos':PR_sentences_pos,
-EW = {'tfidf': PR_EW_TFIDF}
+PR = {'tfidf': PR_TFIDF, 'sentences_pos': PR_sentences_pos} #'sentence_pos':PR_sentences_pos,
+EW = {'tfidf': EW_TFIDF, 'nounP':EW_nounPhrases}
 vectorizer = 0
+
+#print noun_phrases
 
 
 def getPR(func_name):
@@ -21,7 +28,7 @@ def getEW(func_name):
     return EW[func_name]
 
 
-def rank(graphs, iterations=1):
+def rank(graphs, iterations=5):
     '''
     :param graphs: all graphs
     :param iterations:
@@ -31,10 +38,10 @@ def rank(graphs, iterations=1):
 
     function_ranks = []
 
-    cnt = 0
     for prior in PR:
         for eWeight in EW:
             rank_dicts = []
+            cnt = 0
             for doc_number in range(len(graphs)):
                 cnt += 1
                 print 'doc ' + str(cnt)
@@ -54,30 +61,32 @@ def rank_doc(graph, prior, eWeight, iterations, doc_number):
 
     for i in range(iterations):
         for key in graph:
-            doc = [all_docs[doc_number]]
+            doc = all_docs[doc_number]
             doc_sentences = all_docs_sentences[doc_number]
             rank_function(rank_dict, int(key), graph, prior, eWeight, doc, doc_sentences)
     return rank_dict
 
 
 def rank_function(rank_dict, sent_number, graph, prior_func, eWeight, doc, doc_sentences, d=0.15):
-    sent = [doc_sentences[sent_number]]
-    prior = getPR(prior_func)(doc, sent)
+    sent = doc_sentences[sent_number]
+    prior = getPR(prior_func)(graph[sent_number])
     #print prior
 
     sumPrior = 0
     for i in graph: # sums over all elements in the doc (graph)
-        sumPrior += getPR(prior_func)(doc, [doc_sentences[int(i)]])
+        sumPrior += getPR(prior_func)(graph[i])
 
     sume = 0
 
-    for link in graph[str(sent_number)]: # link is an edge
+    for link in graph[str(sent_number)][0]: # link is an edge
+        link = int(link)
         PR = rank_dict[str(sent_number)]
-        link_sent = [doc_sentences[link]]
-        weight = getEW(eWeight)(link_sent, sent)
+        link_sent = doc_sentences[link]
+        weight = getEW(eWeight)(graph[0], link, sent_number)
         sumLinkWeights = 0
-        for link_of_link in graph[str(link)]:
-            sumLinkWeights += getEW(eWeight)(link_sent, [doc_sentences[link_of_link]])
+        for link_of_link in graph[str(link)][0]:
+            link_of_link = int(link_of_link)
+            sumLinkWeights += getEW(eWeight)(graph[0], link, link_of_link)
 
         sume += float(PR * weight / sumLinkWeights)
 
@@ -88,7 +97,7 @@ vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False
 vectorizer.fit(all_docs)
 
 graphs = createGraph(all_docs_sentences, vectorizer)
-#print graphs
+print graphs
 
 ranks = rank(graphs)
 print ranks

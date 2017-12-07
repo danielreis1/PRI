@@ -17,13 +17,15 @@ clean_tags = re.compile(r'<[^>]+>')	# regular expression to clean HTML tags from
 def remove_tags(text):
     return clean_tags.sub('', text)
 
-
+cnt = 0
 for site in sites:
     #print('\n\t***\t' + site + '\t***\t')
     d[site] = feedparser.parse(site)
     entries = d[site]['entries']
-    #print entries
-    #print
+    print entries
+    print
+    cnt += 1
+    print 'site ' + str(cnt)
     for entry in entries:
         #links = {site : entry['link']}
         texts = {entry['title'] : entry['content'][0]['value']}

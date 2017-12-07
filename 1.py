@@ -1,6 +1,7 @@
 from functions import *
 
-def rank(graph, sentences_length,  iterations = 50): # rank for ex.1
+
+def rank(graph, sentences_length, iterations=50): # rank for ex.1
     '''
     :param graph:
     :param iterations: number of iterations when ranking
@@ -31,7 +32,7 @@ def rank_function(N, rank_dict, graph, key, d=0.15):
     '''
 
     sum = 0
-    for i in graph[key]:
+    for i in graph[key][0]: # i are keys of dictionary - i is sentence number in a doc
         iter_key = str(i)
         pr = rank_dict[iter_key] #prev rank
         links = len(graph[str(iter_key)])
@@ -60,12 +61,14 @@ print ('all_docs_sentences')
 print (all_docs_sentences)
 print('')
 
-
 vectorizer = TfidfVectorizer(norm='l2', min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, stop_words=stopwords)
 vectorizer.fit(all_docs)
 graphs = createGraph(all_docs_sentences, vectorizer, 0.2)
 graph = graphs[0]
-#print (graph)
+
+print 'graph'
+print (graph)
+print
 
 maxD = 0
 rankz = 0
@@ -81,12 +84,12 @@ rankz = 0
 print 'best_ranked_sent'
 print best_ranked_sent
 print
-for di in range(1,101,1):
+for di in range(1, 101, 1):
     d = float(di)/100
     #print d
     rank_dict = rank(graph, len(all_docs_sentences[0]), iterations=50)
     #print (rank_dict)
-    if(rank_dict[best_ranked_sent] > rankz):
+    if rank_dict[best_ranked_sent] > rankz:
         rankz = rank_dict[best_ranked_sent] # utilizando a frase melhor cotada
         maxD = d
 
@@ -110,6 +113,7 @@ d = 0.15
 rank_dict = rank(graph, len(all_docs_sentences[0]), iterations=50)
 print rank_dict
 
+print
 print
 
 indexes = get_top5_from_dict(rank_dict)
