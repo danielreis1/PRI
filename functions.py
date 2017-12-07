@@ -209,6 +209,9 @@ def bayes_pr(doc, sent):
     for term_sent_index in range(len(tokenize_doc)):
         term_sent = tokenize_doc[term_sent_index]
         if term_sent.strip().lower() in tokenize_phrase:
+            print x.shape
+            print x[0]
+            print term_sent_index
             temp_var = x[0][term_sent_index]
             if temp_var == 0:
                 raise Exception('ERROR in bayes')
