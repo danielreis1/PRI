@@ -9,7 +9,7 @@ from nltk.corpus import mac_morpho
 from nltk.chunk import conlltags2tree, tree2conlltags
 from nltk import UnigramTagger as ut
 from nltk import BigramTagger as bt
-from cPickle import dump,load
+from cPickle import dump, load
 import numpy as np
 import re
 
@@ -385,6 +385,10 @@ def trainAndSaveTagger():
     dump(bi_tag,outfile2,-1)
     outfile2.close()
 
+def saveGraph(graph):
+    outfile = open('graph.p', "wb")
+    dump(graph, outfile)
+
 
 def rank(graph, sentences_length, d, iterations=50): # rank for ex.1
     '''
@@ -425,6 +429,25 @@ def rank_function(N, rank_dict, graph, key, d=0.15):
     rank_dict[key] = float(d)/N + (1-d) * sum
 
     return rank_dict
+
+
+def get_map(values):
+    count = 0
+    sum = 0
+    for i in range(len(values)):
+        if values[i] == 1:
+            count = count + 1
+            sum = sum + (count/(i+1))
+    if sum == 0:
+        return 0
+    return(sum/count)
+
+
+def check_summaries_test(doc, frase, sentences, summaries):
+    if sentences[doc][frase] in summaries[doc][frase]:
+        return 1
+    else:
+        return 0
 
 
 #trainAndSaveTagger()
