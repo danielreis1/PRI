@@ -1,4 +1,5 @@
 import feedparser
+import os
 import re
 import xml.etree.ElementTree as ET
 
@@ -13,39 +14,51 @@ sites =	["http://www.nytimes.com/services/xml/rss/nyt/World.xml",\
 
 d = {}
 clean_tags = re.compile(r'<[^>]+>')	# regular expression to clean HTML tags from text
+cwd = os.getcwd()
 
 def remove_tags(text):
-    return clean_tags.sub('', text)
+	return clean_tags.sub('', text)
+
+def getDomain(url):
+	#requires 'http://' or 'https://'
+	#pat = r'(https?):\/\/(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
+	#'http://' or 'https://' is optional
+	pat = r'((https?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
+	m = re.match(pat, url)
+	if m:
+		domain = m.group('domain')
+		return domain
+	else:
+		return False
 
 cnt = 0
 for site in sites:
-    print('\n\t***\t' + site + '\t***\t')
-    d[site] = feedparser.parse(site)
-    entries = d[site]['entries']
-    #print (entries)
-    #print()
-    cnt += 1
-    #print ('site ' + str(cnt))
-    for entry in entries:
-        #links = {site : entry['link']}
-        titles_source = {entry['link'] : entry['title']}
-        #titles = list(titles_source.values())[0]
-        if 'content' in entry:
-        	content = remove_tags(entry['content'][0]['value']) # tira tags HTML
-        	#content = remove_tags(re.sub('\.{3}', '', entry['content'][0]['value'])) # tira tags HTML e reticencias
-        	texts = {entry['title'] : content} # nao pode ser assim. ha titles e content vazios
-        	#print ('TEM\t' + entry['link'])
-        else:# todos tem summary
-        	summary = remove_tags(entry['summary']) # tira tags HTML e reticencias
-        	texts = {entry['title'] : summary}
-        	'''
-        	for k in list(entry.keys()):
-        		print('\n *** ' + k + ' *** ')
-        		print(entry[k])
-        	'''
-        	#print (list(entry.keys()))
-        	#print (entry['title'])
-        	#print (entry['title_detail'])
+	print('\n\t***\t' + site + '\t***\t')
+	d[site] = feedparser.parse(site)
+	entries = d[site]['entries']
+	cnt += 1
+	#print ('site ' + str(cnt))
+	for entry in entries:
+		#links = {site : entry['link']}
+		titles_source = {entry['link'] : entry['title']}
+		#titles = list(titles_source.values())[0]
+		#with open(cwd + '/ex4/' + getDomain(site) + '.txt', 'a') as doc:
+		with open(cwd + '/ex4/' + 'all_feeds.txt', 'a') as doc:
+			doc.write(entry['title'] + '\n')
 
-        print (texts)
+		if 'content' in entry:
+			content = remove_tags(entry['content'][0]['value']) # tira tags HTML
+			#content = remove_tags(re.sub('\.{3}', '', entry['content'][0]['value'])) # tira tags HTML e reticencias
+			texts = {entry['link'] : entry['title'] + content} # ha titles e content vazios
+			with open(cwd + '/ex4/' + 'all_feeds.txt', 'a') as doc:
+				doc.write(content + '\n')
+
+		else:# todos tem summary
+			summary = remove_tags(entry['summary']) # tira tags HTML e reticencias
+			texts = {entry['link'] : entry['title'] + summary}
+			with open(cwd + '/ex4/' + 'all_feeds.txt', 'a') as doc:
+				doc.write(summary + '\n')
+
+		#print (texts)
+
 
