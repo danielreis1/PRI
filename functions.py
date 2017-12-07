@@ -240,7 +240,7 @@ def createGraph(elements, docs, vectorizer, thresholdCS=0.2):
             addToGraph(graph, i, indexes, doc, sentences)
         graphs.append(graph.copy())
         print 'graph'
-    return graphs
+    return graphs[:]
 
 
 def get_top5_from_dict(D):

@@ -106,18 +106,18 @@ for i in graphs:
     print i
 
 ranks = rank(graphs)
-#print ranks
+print ranks
 
 for funcs_index in range(len(ranks)):
     print functions[funcs_index]
     for i_doc in range(len(ranks[funcs_index])):
-        for d in ranks[funcs_index]:
-            print
-            indexes = get_top5_from_dict(d)
-            indexes = [int(i) for i in indexes]
-            indexes.sort()
-            for i_sent in indexes:
-                print all_docs_sentences[i_doc][i_sent]
-
-
+        #for d in ranks[funcs_index][i_doc]:
+        dict = ranks[funcs_index][i_doc]
+        print dict
+        print
+        indexes = get_top5_from_dict(dict)
+        indexes = [int(i) for i in indexes]
+        indexes.sort()
+        for i_sent in indexes:
+            print all_docs_sentences[int(i_doc)][int(i_sent)]
 
