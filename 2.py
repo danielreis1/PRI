@@ -128,9 +128,11 @@ for funcs_index in range(len(ranks)):
         indexes = get_top5_from_dict(dict)
         indexes = [int(i) for i in indexes]
         indexes.sort()
-        mySummary.append(all_docs_sentences[int(i_doc)])
+        myS = []
         for i_sent in indexes:
             print all_docs_sentences[int(i_doc)][int(i_sent)]
+            myS.append(all_docs_sentences[int(i_doc)][int(i_sent)])
+        mySummary.append(myS[:])
 
 mapValues = []
 
@@ -141,7 +143,7 @@ for mySumDoci in range(len(mySummary)):
         print 'mS'
         print mS
         print
-        if mS in all_summaries_sentences:
+        if mS in all_summaries_sentences: #error aqui
             mapVals.append(1)
         else:
             mapVals.append(0)
@@ -153,3 +155,7 @@ for mapV in mapValues:
     print get_map(mapV)
     print
     cnt += 1
+
+'''
+existe um erro ao testar o map
+'''
