@@ -1,4 +1,3 @@
 # PRI
-Processamento e Recuperação de Informação
-TextRank project
-training Natural Language processing concepts
+Processamento e Recuperação de Informação  
+TextRank project, training Natural Language processing concepts
